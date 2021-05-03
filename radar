@@ -1,0 +1,114 @@
+library(fmsb)
+library(scales)
+
+#Esta función requiere de un maxímo y un minimo.
+max_min <- data.frame(
+  R = c(100, 0), Python = c(100, 0), Julia = c(100, 0))
+
+rownames(max_min) <- c("Max", "Min")
+
+#qIncluyo mis datos
+data<-as.data.frame(cbind(60,10,5))
+colnames(data) <- c("R" , "Python" , "Julia")
+
+#fusionamos por columnas (rows) los dos data frames.
+df <- rbind(max_min, data)
+print(df)
+
+color<-rgb(0.2,0.5,0.5,0.9)
+
+op <- par(mar = c(1, 2, 2, 1))
+radarchart(df, axistype=1 , #axistype me dice el tipo de iformación en el eje
+            
+            #personalizamos el polígono (color lo acabo de crear)
+            pcol= color , pfcol= scales::alpha(color, 0.5) , plwd=2 , 
+            
+            #Personalizamos la rejilla (grid)
+            cglcol="grey", cglty=1, axislabcol="black", caxislabels=c("Bajo", "", "Medio", "", "Alto"), cglwd=0.8,
+            
+           title= "Habilidades en programación estadística",
+           
+            #otros
+            vlcex=1.5 
+)
+#par(op)
+
+#2 ejemplo
+
+exam_scores <- data.frame(
+  row.names = c("Student.1", "Student.2", "Student.3"),
+  Biology = c(7.9, 3.9, 9.4),
+  Physics = c(10, 20, 0),
+  Maths = c(3.7, 11.5, 2.5),
+  Sport = c(8.7, 20, 4),
+  English = c(7.9, 7.2, 12.4),
+  Geography = c(6.4, 10.5, 6.5),
+  Art = c(2.4, 0.2, 9.8),
+  Programming = c(0, 0, 20),
+  Music = c(20, 20, 20)
+)
+exam_scores
+
+#Aquí también nos toca definir el máximo y el mínimo.
+max_min <- data.frame(
+  Biology = c(20, 0), Physics = c(20, 0), Maths = c(20, 0),
+  Sport = c(20, 0), English = c(20, 0), Geography = c(20, 0),
+  Art = c(20, 0), Programming = c(20, 0), Music = c(20, 0)
+)
+rownames(max_min) <- c("Max", "Min")
+
+# Bind the variable ranges to the data
+df <- rbind(max_min, exam_scores)
+df
+
+#personalizamos nuestra función para que quede linda.
+
+create_beautiful_radarchart <- function(data, color = "#00AFBB", 
+                                        vlabels = colnames(data), vlcex = 0.7,
+                                        caxislabels = NULL, title = NULL, ...){
+  radarchart(
+    data, axistype = 1,
+    # Customize the polygon
+    pcol = color, pfcol = scales::alpha(color, 0.5), plwd = 2, plty = 1,
+    # Customize the grid
+    cglcol = "grey", cglty = 1, cglwd = 0.8,
+    # Customize the axis
+    axislabcol = "grey", 
+    # Variable labels
+    vlcex = vlcex, vlabels = vlabels,
+    caxislabels = caxislabels, title = title, ...
+  )
+}
+
+create_beautiful_radarchart(
+  data = df, caxislabels = c(0, 5, 10, 15, 20),
+  color = c("#00AFBB", "#E7B800", "#FC4E07")
+)
+legend(
+  x = "right", legend = rownames(df[-c(1,2),]), horiz = FALSE,
+  bty = "n", pch = 20 , col = c("#00AFBB", "#E7B800", "#FC4E07"),
+  text.col = "black", cex = 1, pt.cex = 1.5
+)
+par(op)
+
+
+
+#ejemplo 3
+
+colors <- c("#00AFBB", "#E7B800", "#FC4E07")
+titles <- c("Student.1", "Student.2", "Student.3")
+
+# Reduce plot margin using par()
+# Split the screen in 3 parts
+op <- par(mar = c(1, 1, 1, 1))
+par(mfrow = c(1,3))
+
+# Create the radar chart
+for(i in 1:3){
+  create_beautiful_radarchart(
+    data = df[c(1, 2, i+2), ], caxislabels = c(0, 5, 10, 15, 20),
+    color = colors[i], title = titles[i]
+  )
+}
+par(op)
+
