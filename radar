@@ -1,5 +1,6 @@
 library(fmsb)
 library(scales)
+library(plotly)
 
 #Esta función requiere de un maxímo y un minimo.
 max_min <- data.frame(
@@ -31,7 +32,7 @@ radarchart(df, axistype=1 , #axistype me dice el tipo de iformación en el eje
             #otros
             vlcex=1.5 
 )
-#par(op)
+par(op)
 
 #2 ejemplo
 
@@ -85,7 +86,7 @@ create_beautiful_radarchart(
   color = c("#00AFBB", "#E7B800", "#FC4E07")
 )
 legend(
-  x = "right", legend = rownames(df[-c(1,2),]), horiz = FALSE,
+  x = "top", legend = rownames(df[-c(1,2),]), horiz = FALSE,
   bty = "n", pch = 20 , col = c("#00AFBB", "#E7B800", "#FC4E07"),
   text.col = "black", cex = 1, pt.cex = 1.5
 )
@@ -112,3 +113,54 @@ for(i in 1:3){
 }
 par(op)
 
+####PAQUETE PLOTLY
+
+fig <- plot_ly(
+  type = 'scatterpolar',
+  r = c(39, 28, 8, 7, 28, 39),
+  theta = c('A','B','C', 'D', 'E', 'A'),
+  fill = 'toself'
+) 
+fig <- fig %>%
+  layout(
+    polar = list(
+      radialaxis = list(
+        visible = T,
+        range = c(0,50)
+      )
+    ),
+    showlegend = F
+  )
+
+fig
+
+
+#Con más sujetos:
+  
+  fig <- plot_ly(
+    type = 'scatterpolar',
+    fill = 'toself'
+  ) 
+fig <- fig %>%
+  add_trace(
+    r = c(39, 28, 8, 7, 28, 39),
+    theta = c('A','B','C', 'D', 'E', 'A'),
+    name = 'Group A'
+  ) 
+fig <- fig %>%
+  add_trace(
+    r = c(1.5, 10, 39, 31, 15, 1.5),
+    theta = c('A','B','C', 'D', 'E', 'A'),
+    name = 'Group B'
+  ) 
+fig <- fig %>%
+  layout(
+    polar = list(
+      radialaxis = list(
+        visible = T,
+        range = c(0,50)
+      )
+    )
+  )
+
+fig
